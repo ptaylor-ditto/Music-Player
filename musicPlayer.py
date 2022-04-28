@@ -1,14 +1,18 @@
 import PySimpleGUI as sg
-import pygame
+import pygame, os
+from random import randint
 pygame.init()
-songs = ['rick_astley.mp3', 'baby-shark.mp3']
-music = 'rick_astley.mp3'
-pygame.mixer.music.load(music)
+songs = ['baby-shark.mp3', 'rick_astley.mp3']
+os.system('cls')
 x = 0
+pathSep = os.path.sep
+fullPathToMusicFile = pathSep.join([os.getcwd(), songs[x]])
+pygame.mixer.music.load(fullPathToMusicFile)
 layout = [
-    [sg.Button(image_filename='back_button.png', size=(50,50), auto_size_button=True, key='back'),
-        sg.Button(image_filename='play_button.png', size=(50,50), auto_size_button=True, key='play/pause', visible=True),
-        sg.Button(image_filename='forward_button.png', size=(50,50), auto_size_button=True, key='forward')]
+    [sg.Text('Volume  '), sg.Slider(range=(0,100), orientation='h', size=(60,10), key=('slider'))],
+        [sg.Button(image_filename='back_button.png', size=(40,40), auto_size_button=True, key='back'),
+        sg.Button(image_filename='play_button.png', size=(40,40), auto_size_button=True, key='play/pause', visible=True),
+        sg.Button(image_filename='forward_button.png', size=(40,40), auto_size_button=True, key='forward')]
 ]
 window = sg.Window('title', layout)
 pygame.mixer.music.play()
@@ -19,6 +23,7 @@ def play(x):
     pygame.mixer.music.play()
 while True:
     event, values = window.read()
+    pygame.mixer.music.set_volume(values['slider'])
     if event == sg.WIN_CLOSED:
         break
     elif event == 'play/pause':
